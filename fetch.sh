@@ -13,15 +13,21 @@ do
     mkdir -p data/$SOURCE_LAYER-$TARGET_LAYER-$EV/
 
     for date in $DATES; do
-    	echo $date
+        echo $date
+
         FILENAME=data/$SOURCE_LAYER-$TARGET_LAYER-$EV/$date.$SOURCE_LAYER-$TARGET_LAYER-$EV.daily_mobility.$FORMAT
 
-	    flowmaps-data risk download \
-	    	--date $date \
-	    	--source-layer $SOURCE_LAYER \
-	    	--target-layer $TARGET_LAYER \
-	    	--ev $EV \
-	    	--output-format $FORMAT \
-	    	--output-file $FILENAME
+        if [ -f "$FILENAME" ]; then
+            echo "skipping $FILENAME (already exists)"
+            continue
+        fi
+
+        flowmaps-data risk download \
+            --date $date \
+            --source-layer $SOURCE_LAYER \
+            --target-layer $TARGET_LAYER \
+            --ev $EV \
+            --output-format $FORMAT \
+            --output-file $FILENAME
     done
 done
